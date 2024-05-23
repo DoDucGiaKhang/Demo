@@ -1,0 +1,24 @@
+<h2 class="text-center">ORDER</h2>
+<ul>
+  <li *ngFor="let order of orders.productOrders">
+    {{ order.product.name }} - ${{ order.product.price }} x
+    {{ order.quantity }} pcs.
+  </li>
+</ul>
+<h3 class="text-right">Total amount: ${{ total }}</h3>
+
+<button class="btn btn-primary btn-block" (click)="pay()" *ngIf="status!==StatusType.PAID">
+  Pay
+</button>
+<div class="alert alert-success" role="alert" *ngIf="status===StatusType.PAID">
+  <strong>Congratulation!</strong> You successfully made the order.
+</div>
+<div class="alert alert-danger" role="alert" *ngIf="status===StatusType.REJECTED">
+  <strong>Sorry!</strong> The order is rejected.
+</div>
+<div class="alert alert-danger" role="alert" *ngIf="status===StatusType.OUT_OF_STOCK">
+  <strong>Sorry!</strong> The product is not available at the inventory.
+</div>
+<div class="alert alert-danger" role="alert" *ngIf="status===StatusType.NOT_ENOUGH_FUND">
+  <strong>Sorry!</strong> You don't have enough fund to purchase the product.
+</div>

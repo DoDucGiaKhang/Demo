@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<div class="container-fluid">
+  <div class="topnav">
+    <a routerLink="/" (click)="reset()"><img style="float: left" height="40px" src="/assets/images/logo.png"
+        alt="Smart Commerce"> </a>
+    <a routerLink="/products" (click)="reset()">Products</a>
+    <a routerLink="/orders">Orders</a>
+    <a routerLink="/profile">Profile</a>
+    <a class="nav-link" (click)="logout()">Logout</a>
+    <div class="search-container">
+      <div class="search-container">
+        <form>
+          <input type="text" placeholder="Search.." [(ngModel)]="keyword" name="keyword">
+          <button type=" submit" (click)="search()"><i class="fa fa-search"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

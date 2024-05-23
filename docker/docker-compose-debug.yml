@@ -1,0 +1,143 @@
+version: '3.6'
+
+services:
+  eureka-server:
+    image: 'eureka-server:latest'
+    build:
+      context: ./../eureka-server
+      dockerfile: ./../eureka-server/docker/Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+
+  product-service:
+    image: 'product-service:latest'
+    build:
+      context: ./../product-service
+      dockerfile: ./../product-service/docker/Dockerfile_debug
+    ports:
+      - "8000:8000"
+    container_name: product-service
+    depends_on:
+      - product-ds
+      - eureka-server
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://product-ds:5432/productdb
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=abc123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    command: java -Xdebug -Xrunjdwp:transport=dt_socket,address=*:5005,server=y,suspend=y -jar /product-service/target/product-service-0.0.1-SNAPSHOT.jar
+
+  product-ds:
+    image: 'postgres:13.1-alpine'
+    container_name: product-ds
+    ports:
+      - "8100:5432"
+    environment:
+      - POSTGRES_USER=sa
+      - POSTGRES_PASSWORD=abc123
+      - POSTGRES_DB=productdb
+
+  order-service:
+    image: 'order-service:latest'
+    build:
+      context: ./../order-service
+      dockerfile: ./../order-service/docker/Dockerfile_debug
+    ports:
+      - "9000:9000"
+    container_name: order-service
+    depends_on:
+      - product-service
+      - order-ds
+      - eureka-server
+      - kafka
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://order-ds:5432/orderdb
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=abc123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    command: java -Xdebug -Xrunjdwp:transport=dt_socket,address=*:5005,server=y,suspend=y -jar /order-service/target/order-service-0.0.1-SNAPSHOT.jar
+
+  order-ds:
+    image: 'postgres:13.1-alpine'
+    container_name: order-ds
+    ports:
+      - "9100:5432"
+    environment:
+      - POSTGRES_USER=sa
+      - POSTGRES_PASSWORD=abc123
+      - POSTGRES_DB=orderdb
+
+  web-server:
+    image: 'web-server:latest'
+    build:
+      context: ./../frontend/
+      dockerfile: ./docker/Dockerfile
+    container_name: web-server
+    ports:
+      - "4200:80"
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:3.8.1
+    container_name: kafdrop
+    depends_on:
+      - zookeeper
+      - kafka
+    expose:
+      - 19000
+    ports:
+      - 19000:9000
+    environment:
+      ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKERCONNECT: kafka:29092
+
+  rabbitmq:
+      image: rabbitmq:3.7-management
+      container_name: rabbitmq
+      expose:
+        - 5672
+        - 15672
+      ports:
+        - 5672:5672
+        - 15672:15672
+
+  zookeeper:
+      image: confluentinc/cp-zookeeper:latest
+      container_name: zookeeper
+      ports:
+        - 2181:2181
+      environment:
+        ZOOKEEPER_CLIENT_PORT: 2181
+        ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+      # "`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-
+      # An important note about accessing Kafka from clients on other machines:
+      # -----------------------------------------------------------------------
+      #
+      #
+      # The config used here exposes port 9092 for _external_ connections to the broker
+      # i.e. those from _outside_ the docker network. This could be from the host machine
+      # running docker, or maybe further afield if you've got a more complicated setup.
+      # If the latter is true, you will need to change the value 'localhost' in
+      # KAFKA_ADVERTISED_LISTENERS to one that is resolvable to the docker host from those
+      # remote clients
+      #
+      # For connections _internal_ to the docker network, such as from other services
+      # and components, use kafka:29092.
+      #
+      # See https://rmoff.net/2018/08/02/kafka-listeners-explained/https://rmoff.net/2018/08/02/kafka-listeners-explained/ for details
+      # "`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-
+      #
+      image: confluentinc/cp-kafka:latest
+      container_name: kafka
+      ports:
+        - 19092:9092
+        - 29092:29092
+      environment:
+        KAFKA_BROKER_ID: 1
+        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:19092
+        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+        KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1

@@ -1,0 +1,50 @@
+server:
+  port: 8765
+  ribbon:
+    eureka:
+      enabled: true
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    config:
+      enabled: false
+#    loadbalancer:
+#      ribbon:
+#        enabled: false
+zuul:
+  ignoredServices: '*'
+#  sensitiveHeaders: Cookie, Set-Cookie
+  sensitiveHeaders:
+  routes:
+    user-service:
+      path: /api/users/**
+      serviceId: user-service
+      url: http://localhost:7000/api/users
+    auth-service:
+      path: /api/auth/**
+      serviceId: auth-service
+      url: http://localhost:7000/api/auth
+    inventory-service:
+      path: /api/products/**
+      serviceId: innventory-service
+      url: http://localhost:8000/api/products
+    order-service:
+      path: /api/orders/**
+      serviceId: order-service
+      url: http://localhost:9000/api/orders
+    payment-service:
+      path: /api/payments/**
+      serviceId: payment-service
+      url: http://localhost:5000/api
+    image-service:
+      path: /api/photos/**
+      serviceId: image-service
+      url: http://localhost:4000/api/photos
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+secret: somerandomsecret

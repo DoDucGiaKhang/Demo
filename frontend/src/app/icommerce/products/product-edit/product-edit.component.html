@@ -1,0 +1,72 @@
+<div class="row">
+    <div class="col-md-12">
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="id">ID</label>
+                        <input type="text" id="id" formControlName="id" value="{{product.id}}" class="form-control"
+                            [readonly]="true">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" formControlName="name" value="{{product.name}}"
+                            class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <img [src]="getImage()" alt="" class="img-responsive">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="text" id="price" formControlName="price" value="{{product.price}}"
+                            class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="brand">Brand</label>
+                        <input type="text" id="brand" formControlName="brand" value="{{product.brand}}"
+                            class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="color">Color</label>
+                        <input type="text" id="color" formControlName="color" value="{{product.color}}"
+                            class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea type="text" id="description" class="form-control" formControlName="description"
+                            value="{{product.description}}" rows="6"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-success padding-0" [disabled]="!productForm.valid"
+                        (click)="onSubmit()">Save</button>
+                    <button type="button" class="btn btn-danger padding-0" (click)="onCancel()">Cancel </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,5 @@
+FROM adoptopenjdk/openjdk15
+
+RUN apt-get update && apt-get install -y maven
+COPY . /image-service
+RUN  cd /image-service && mvn clean package -DskipTests

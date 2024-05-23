@@ -1,0 +1,28 @@
+server:
+  port: 8000
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:8100/productdb
+    username: sa
+    password: abc123
+    name: productdb
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  application:
+    name: inventory-service
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: 1
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true

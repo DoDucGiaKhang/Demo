@@ -1,0 +1,229 @@
+version: '3.6'
+
+services:
+  eureka-server:
+    image: 'eureka-server:latest'
+    build:
+      context: ./../eureka-server
+      dockerfile: ./../eureka-server/docker/Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+
+  api-gateway:
+    image: 'api-gateway:latest'
+    build:
+      context: ./../api-gateway
+      dockerfile: ./../api-gateway/docker/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8765:8765"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+  inventory-service:
+    image: 'inventory-service:latest'
+    build:
+      context: ./../inventory-service
+      dockerfile: ./../inventory-service/docker/Dockerfile
+    volumes:
+      - ./../inventory-service/target:/inventory-service/target
+    ports:
+      - "8000:8000"
+    container_name: inventory-service
+    depends_on:
+      - product-ds
+      - eureka-server
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://product-ds:5432/productdb
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=abc123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+  product-ds:
+    image: 'postgres:13.1-alpine'
+    container_name: product-ds
+    ports:
+      - "8100:5432"
+    environment:
+      - POSTGRES_USER=sa
+      - POSTGRES_PASSWORD=abc123
+      - POSTGRES_DB=productdb
+
+  order-service:
+    image: 'order-service:latest'
+    build:
+      context: ./../order-service
+      dockerfile: ./../order-service/docker/Dockerfile
+    volumes:
+      - ./../order-service/target:/order-service/target
+    ports:
+      - "9000:9000"
+    container_name: order-service
+    depends_on:
+      - inventory-service
+      - order-ds
+      - eureka-server
+      - kafka
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://order-ds:5432/orderdb
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=abc123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+  order-ds:
+    image: 'postgres:13.1-alpine'
+    container_name: order-ds
+    ports:
+      - "9100:5432"
+    environment:
+      - POSTGRES_USER=sa
+      - POSTGRES_PASSWORD=abc123
+      - POSTGRES_DB=orderdb
+
+  user-service:
+    image: 'user-service:latest'
+    build:
+      context: ./../user-service
+      dockerfile: ./../user-service/docker/Dockerfile
+    volumes:
+      - ./../user-service/target:/user-service/target
+    ports:
+      - "7000:7000"
+    container_name: user-service
+    depends_on:
+      - user-ds
+      - eureka-server
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://user-ds:5432/userdb
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=abc123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+  user-ds:
+      image: 'postgres:13.1-alpine'
+      container_name: user-ds
+      ports:
+        - "7100:5432"
+      environment:
+        - POSTGRES_USER=sa
+        - POSTGRES_PASSWORD=abc123
+        - POSTGRES_DB=userdb
+
+  payment-service:
+    image: 'payment-service:latest'
+    build:
+      context: ./../payment-service
+      dockerfile: ./../payment-service/docker/Dockerfile
+    volumes:
+      - ./../payment-service/target:/payment-service/target
+    ports:
+      - "5000:5000"
+    container_name: payment-service
+    depends_on:
+      - payment-ds
+      - eureka-server
+      - kafka
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://payment-ds:5432/paymentdb
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=abc123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+  payment-ds:
+      image: 'postgres:13.1-alpine'
+      container_name: payment-ds
+      ports:
+        - "5100:5432"
+      environment:
+        - POSTGRES_USER=sa
+        - POSTGRES_PASSWORD=abc123
+        - POSTGRES_DB=paymentdb
+
+  web-server:
+    image: 'web-server:latest'
+    build:
+      context: ./../frontend/
+      dockerfile: ./docker/Dockerfile
+    container_name: web-server
+    ports:
+      - "4200:80"
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:3.8.1
+    container_name: kafdrop
+    depends_on:
+      - zookeeper
+      - kafka
+    expose:
+      - 19000
+    ports:
+      - 19000:9000
+    environment:
+      ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKERCONNECT: kafka:29092
+
+  zookeeper:
+      image: confluentinc/cp-zookeeper:latest
+      container_name: zookeeper
+      ports:
+        - 2181:2181
+      environment:
+        ZOOKEEPER_CLIENT_PORT: 2181
+        ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+      image: confluentinc/cp-kafka:latest
+      container_name: kafka
+      ports:
+        - 9092:9092
+        - 29092:29092
+      environment:
+        KAFKA_BROKER_ID: 1
+        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+        KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+        KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  image-service:
+    image: 'image-service:latest'
+    build:
+      context: ./../image-service
+      dockerfile: ./../image-service/docker/Dockerfile
+    volumes:
+      - ./../image-service/target:/inventory-service/target
+    ports:
+      - "4000:4000"
+    container_name: image-service
+    depends_on:
+      - image-ds
+    environment:
+      - SPRING_DATA_MONGODB_HOST=image-ds
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_DATABASE=imagedb
+      - SPRING_DATA_MONGODB_USERNAME=sa
+      - SPRING_DATA_MONGODB_PASSWORD=abc123
+      - SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE=admin
+
+  image-ds:
+    image: mongo:4.2.3-bionic
+    container_name: image-ds
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=imagedb
+      - MONGO_INITDB_ROOT_USERNAME=sa
+      - MONGO_INITDB_ROOT_PASSWORD=abc123
+    volumes:
+      - mongodb:/data/db
+volumes:
+  mongodb:

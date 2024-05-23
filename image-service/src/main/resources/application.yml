@@ -1,0 +1,17 @@
+server:
+  port: 4000
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: imagedb
+      username: sa
+      password: abc123
+      authentication-database: admin
+    multipart:
+      max-file-size: 256MB
+      max-request-size: 256MB
+      enabled: true
+  application:
+    name: image-service

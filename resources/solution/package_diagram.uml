@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.vdc.icommerce</OriginalElement>
+  <nodes>
+    <node x="0.0" y="336.2578125">IcommerceApplication</node>
+    <node x="492.94166666666666" y="336.2578125">com.vdc.icommerce.controller</node>
+    <node x="98.57566287878785" y="257.2578125">com.vdc.icommerce.service</node>
+    <node x="459.28832859848484" y="5.2578125">com.vdc.icommerce.model</node>
+    <node x="308.98934659090907" y="148.2578125">com.vdc.icommerce.exception</node>
+    <node x="509.98934659090907" y="148.2578125">com.vdc.icommerce.dto</node>
+    <node x="90.98934659090907" y="148.2578125">com.vdc.icommerce.repository</node>
+    <node x="0.0" y="410.2578125">IcommerceApplicationTests</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.vdc.icommerce.repository" target="com.vdc.icommerce.model">
+      <point x="0.0" y="-14.5" />
+      <point x="169.98934659090907" y="128.2578125" />
+      <point x="531.970146780303" y="128.2578125" />
+      <point x="11.181818181818187" y="14.5" />
+    </edge>
+    <edge source="com.vdc.icommerce.service" target="com.vdc.icommerce.model">
+      <point x="-51.375" y="-14.5" />
+      <point x="115.70066287878785" y="237.2578125" />
+      <point x="80.05184659090907" y="237.2578125" />
+      <point x="80.05184659090907" y="118.2578125" />
+      <point x="520.7883285984849" y="118.2578125" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="IcommerceApplication" target="com.vdc.icommerce.service">
+      <point x="47.0" y="-14.5" />
+      <point x="141.0" y="316.2578125" />
+      <point x="132.82566287878785" y="316.2578125" />
+      <point x="-34.25" y="14.5" />
+    </edge>
+    <edge source="com.vdc.icommerce.controller" target="com.vdc.icommerce.dto">
+      <point x="0.0" y="-14.5" />
+      <point x="571.9416666666666" y="306.2578125" />
+      <point x="600.8226799242425" y="306.2578125" />
+      <point x="36.33333333333337" y="14.5" />
+    </edge>
+    <edge source="com.vdc.icommerce.controller" target="com.vdc.icommerce.service">
+      <point x="-63.19999999999999" y="-14.5" />
+      <point x="508.7416666666667" y="316.2578125" />
+      <point x="201.32566287878785" y="316.2578125" />
+      <point x="34.25" y="14.5" />
+    </edge>
+    <edge source="com.vdc.icommerce.exception" target="com.vdc.icommerce.exception">
+      <point x="0.0" y="14.5" />
+      <point x="384.48934659090907" y="217.2578125" />
+      <point x="268.98934659090907" y="217.2578125" />
+      <point x="268.98934659090907" y="153.09114583333334" />
+      <point x="-75.5" y="-9.666666666666657" />
+    </edge>
+    <edge source="com.vdc.icommerce.dto" target="com.vdc.icommerce.dto">
+      <point x="0.0" y="14.5" />
+      <point x="564.489346590909" y="207.2578125" />
+      <point x="479.98934659090907" y="207.2578125" />
+      <point x="479.98934659090907" y="155.5078125" />
+      <point x="-54.5" y="-7.25" />
+    </edge>
+    <edge source="com.vdc.icommerce.dto" target="com.vdc.icommerce.model">
+      <point x="-27.25" y="-14.5" />
+      <point x="537.239346590909" y="128.2578125" />
+      <point x="543.1519649621212" y="128.2578125" />
+      <point x="22.363636363636374" y="14.5" />
+    </edge>
+    <edge source="com.vdc.icommerce.controller" target="com.vdc.icommerce.model">
+      <point x="63.200000000000045" y="-14.5" />
+      <point x="635.1416666666667" y="316.2578125" />
+      <point x="640.489346590909" y="316.2578125" />
+      <point x="640.489346590909" y="108.2578125" />
+      <point x="576.6974195075758" y="108.2578125" />
+      <point x="55.909090909090935" y="14.5" />
+    </edge>
+    <edge source="com.vdc.icommerce.controller" target="com.vdc.icommerce.exception">
+      <point x="-31.599999999999966" y="-14.5" />
+      <point x="540.3416666666667" y="306.2578125" />
+      <point x="444.88934659090904" y="306.2578125" />
+      <point x="60.39999999999998" y="14.5" />
+    </edge>
+    <edge source="com.vdc.icommerce.service" target="com.vdc.icommerce.exception">
+      <point x="51.375" y="-14.5" />
+      <point x="218.45066287878785" y="237.2578125" />
+      <point x="414.68934659090905" y="237.2578125" />
+      <point x="30.19999999999999" y="14.5" />
+    </edge>
+    <edge source="com.vdc.icommerce.model" target="com.vdc.icommerce.model">
+      <point x="-33.54545454545455" y="14.5" />
+      <point x="487.2428740530303" y="74.2578125" />
+      <point x="419.28832859848484" y="74.2578125" />
+      <point x="419.28832859848484" y="16.1328125" />
+      <point x="-61.5" y="-3.625" />
+    </edge>
+    <edge source="IcommerceApplication" target="com.vdc.icommerce.model">
+      <point x="-47.0" y="-14.5" />
+      <point x="47.0" y="316.2578125" />
+      <point x="52.375" y="316.2578125" />
+      <point x="52.375" y="108.2578125" />
+      <point x="509.60651041666665" y="108.2578125" />
+      <point x="-11.181818181818187" y="14.5" />
+    </edge>
+    <edge source="com.vdc.icommerce.service" target="com.vdc.icommerce.repository">
+      <point x="17.125" y="-14.5" />
+      <point x="184.20066287878785" y="237.2578125" />
+      <point x="209.48934659090907" y="237.2578125" />
+      <point x="39.5" y="14.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="338.0" y="197.5" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

@@ -1,0 +1,58 @@
+<div class="row">
+    <div class="col-6">
+        <div class="row padding-0">
+            <img [src]="getImage()" alt="" class="img-responsive">
+        </div>
+        <div style="text-align: center">
+            <button routerLink="/product-edit" class=" btn btn-primary padding-0" *ngIf="hasAdminRole()">
+                Edit Product
+            </button>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="text-center">
+                <h1>{{ order.product.name }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 padding-0" style="color: red;">
+                $ {{order.product.price}}
+            </div>
+        </div>
+        <div class="row padding-0">
+            <div>
+                Brand:
+            </div>
+            <div style="margin-left:10px;">
+                {{ order.product.brand }}
+            </div>
+        </div>
+        <div class="row padding-0">
+            <div>
+                Color:
+            </div>
+            <div style="margin-left:10px;">
+                {{ order.product.color }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="padding-0">Quantity</div>
+            <div class="col-2 padding-0">
+                <input type="number" min="0" class="form-control" [(ngModel)]="order.quantity" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 padding-0">
+                <button class="btn btn-primary" (click)="addToCart()" [disabled]="order.quantity<=0">
+                    Add To Cart
+                </button>
+            </div>
+            <div class="col-6 padding-0">
+                <button class=" btn btn-primary btn-block" (click)="removeFromCart()">
+                    Remove From Cart
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

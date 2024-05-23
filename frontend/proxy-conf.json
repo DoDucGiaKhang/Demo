@@ -1,0 +1,22 @@
+{
+  "/api/products": {
+    "target": "http://localhost:8765",
+    "secure": true
+  },
+  "/api/orders": {
+    "target": "http://localhost:8765",
+    "secure": true
+  },
+  "/api/users": {
+    "target": "http://localhost:8765",
+    "secure": true
+  },
+  "/api/auth": {
+    "target": "http://localhost:8765",
+    "secure": true
+  },
+  "/api/photos": {
+    "target": "http://localhost:8765",
+    "secure": true
+  }
+}

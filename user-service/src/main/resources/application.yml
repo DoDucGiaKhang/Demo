@@ -1,0 +1,29 @@
+server:
+  port: 7000
+  ribbon:
+    eureka:
+      enabled: false
+    listOfServers: localhost:7000
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:7100/userdb
+    username: sa
+    password: abc123
+    name: userdb
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  application:
+    name: user-service
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+secret: somerandomsecret

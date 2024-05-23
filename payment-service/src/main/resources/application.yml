@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5100/paymentdb
+    username: sa
+    password: abc123
+    name: paymentdb
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  application:
+    name: payment-service
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: 1
+server:
+  port: 5000
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+logging:
+  level:
+    root: INFO

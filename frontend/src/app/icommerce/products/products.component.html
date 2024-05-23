@@ -1,0 +1,16 @@
+<div class="row card-deck">
+  <div class="col-lg-4 col-md-6 mb-4" *ngFor="let order of productOrders">
+    <div class="card text-center">
+      <div class="card-header">
+        <h4>{{ order.product.name }}</h4>
+      </div>
+      <div class="card-body">
+        <img class=" card-img-top" [src]="getImage(order.product)" (click)="selectProduct(order)" alt="" width="200m"
+          height="200m" />
+        <div class="row">
+          <div class="padding-1" style="color: red;">$ {{order.product.price}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

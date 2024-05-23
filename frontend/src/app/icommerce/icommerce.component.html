@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-md-9" *ngIf="!orderFinished && !showProductDetail()">
+    <app-products #productsC></app-products>
+  </div>
+  <div class="col-md-9" *ngIf="showProductDetail()">
+    <app-product-detail #productDetailC></app-product-detail>
+  </div>
+  <div class="col-md-3">
+    <app-shopping-cart (onOrderFinished)="finishOrder($event)" #shoppingCartC [hidden]="orderFinished">
+    </app-shopping-cart>
+  </div>
+  <div class="col-md-6">
+    <app-orders #ordersC [hidden]="!orderFinished || showProductDetail()"></app-orders>
+  </div>
+
+</div>
